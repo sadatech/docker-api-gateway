@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+# Installer
+mkdir -p /opt/healthcheck
+(cd /opt/healthcheck && npm install express)
+
+# Create startup item
+sed -i "$ i\screen -dmS healthcheck-runner node /opt/healthcheck/init.js" /etc/userd.local

@@ -1,0 +1,36 @@
+#!/bin/sh
+set -e
+
+# traefik start basepath
+mkdir -p /opt/traefik/conf
+mkdir -p /opt/traefik/providers
+mkdir -p /opt/traefik/logs
+
+# download package
+(cd /opt/traefik && wget http://github.com/traefik/traefik/releases/download/v2.5.7/traefik_v2.5.7_linux_amd64.tar.gz)
+
+# extract package
+(cd /opt/traefik && tar -xf traefik_v2.5.7_linux_amd64.tar.gz && rm traefik_v2.5.7_linux_amd64.tar.gz)
+
+# create traefik as background
+echo "[Unit]" > /etc/systemd/system/traefik.service
+echo "Description=Traefik v2.5.7" >> /etc/systemd/system/traefik.service
+echo "After=network.target network-online.target nss-lookup.target" >> /etc/systemd/system/trojan.service
+echo "" >> /etc/systemd/system/traefik.service
+echo "[Service]" >> /etc/systemd/system/traefik.service
+echo "Type=simple" >> /etc/systemd/system/traefik.service
+echo "StandardError=journal" >> /etc/systemd/system/traefik.service
+echo "ExecStart=/opt/traefik/traefik --configFile=/opt/traefik/conf/traefik.yml" >> /etc/systemd/system/traefik.service
+echo "TimeoutSec=0" >> /etc/systemd/system/traefik.service
+echo "KillMode=process" >> /etc/systemd/system/traefik.service
+echo "StandardOutput=tty" >> /etc/systemd/system/traefik.service
+echo "RemainAfterExit=yes" >> /etc/systemd/system/traefik.service
+echo "Restart=on-failure" >> /etc/systemd/system/traefik.service
+echo "RestartSec=3s" >> /etc/systemd/system/traefik.service
+echo "" >> /etc/systemd/system/traefik.service
+echo "[Install]" >> /etc/systemd/system/traefik.service
+echo "WantedBy=multi-user.target" >> /etc/systemd/system/traefik.service
+chmod 644 /etc/systemd/system/traefik.service
+
+# enable traefik startup
+systemctl enable traefik

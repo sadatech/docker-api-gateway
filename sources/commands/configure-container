@@ -1,0 +1,24 @@
+#!/bin/sh
+set -e
+
+# Disable Getty TTY1@service
+systemctl disable getty@tty1.service getty-static.service
+systemctl mask getty@tty1.service getty-static.service
+
+# Clear Memory Command
+mkdir -p /usr/local/command
+echo "#!/bin/sh -e" > /usr/local/command/clear-memory
+echo "echo \"Clearing Memory...\"" > /usr/local/command/clear-memory
+echo "sync; echo 3 > /proc/sys/vm/drop_caches" >> /usr/local/command/clear-memory
+sed -i "$ i\/usr/local/command/clear-memory > /dev/null 2>&1" /etc/userd.local
+chmod +x /usr/local/command/clear-memory
+
+# Fix syslog big file
+echo "#!/bin/sh -e" > /usr/local/command/clear-syslog
+echo "rm /var/log/syslog" >> /usr/local/command/clear-syslog
+echo "touch /var/log/syslog" >> /usr/local/command/clear-syslog
+echo "chown syslog:adm /var/log/syslog" >> /usr/local/command/clear-syslog
+echo "systemctl restart rsyslog" >> /usr/local/command/clear-syslog
+echo "# Auto Clear SYSLOG" > /etc/cron.d/clear-syslog
+echo "0 0 * * * root /usr/local/command/clear-syslog" >> /etc/cron.d/clear-syslog
+chmod +x /usr/local/command/clear-syslog
