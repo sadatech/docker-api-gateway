@@ -1,20 +1,16 @@
 FROM sadaindonesia/ubuntu-baseline:focal
+ADD /sources/images/traefik_v2.5.7_linux_amd64.tar.gz /opt/traefik
 
 # Update package list
 RUN apt -y update && \
     apt -y upgrade
 
 # Configure Command
+ADD /sources/config /tmp
 ADD /sources/commands /tmp
 RUN dos2unix /tmp/configure-* && \
     chmod +x /tmp/configure-* && \
-    sh -c /tmp/configure-traefik && \
-    sh -c /tmp/configure-nodejs && \
-    sh -c /tmp/configure-healthcheck && \
-    sh -c /tmp/configure-container
-
-# Add Health Check
-ADD /sources/healthcheck /opt/healthcheck
+    sh -c /tmp/configure-traefik
 
 # Clear Temp
 RUN rm /etc/timezone && \
@@ -28,6 +24,5 @@ RUN rm /etc/timezone && \
 
 # Container Environment
 WORKDIR /home/vhosts
-HEALTHCHECK CMD node /opt/healthcheck/monitor.js
 LABEL maintainer="Andika Muhammad Cahya <andkmc99@gmail.com>"
 LABEL container="API Gateway Bridge Application (Traefik CE)"

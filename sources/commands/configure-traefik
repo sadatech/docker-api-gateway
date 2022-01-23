@@ -1,21 +1,17 @@
 #!/bin/sh
 set -e
 
+# move default config
+mv /tmp/traefik /opt/traefik/conf
+
 # traefik start basepath
-mkdir -p /opt/traefik/conf
 mkdir -p /opt/traefik/providers
 mkdir -p /opt/traefik/logs
-
-# download package
-(cd /opt/traefik && wget http://github.com/traefik/traefik/releases/download/v2.5.7/traefik_v2.5.7_linux_amd64.tar.gz)
-
-# extract package
-(cd /opt/traefik && tar -xf traefik_v2.5.7_linux_amd64.tar.gz && rm traefik_v2.5.7_linux_amd64.tar.gz)
 
 # create traefik as background
 echo "[Unit]" > /etc/systemd/system/traefik.service
 echo "Description=Traefik v2.5.7" >> /etc/systemd/system/traefik.service
-echo "After=network.target network-online.target nss-lookup.target" >> /etc/systemd/system/trojan.service
+echo "After=network.target network-online.target nss-lookup.target" >> /etc/systemd/system/traefik.service
 echo "" >> /etc/systemd/system/traefik.service
 echo "[Service]" >> /etc/systemd/system/traefik.service
 echo "Type=simple" >> /etc/systemd/system/traefik.service
