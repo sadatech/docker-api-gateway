@@ -1,4 +1,4 @@
-FROM sadaindonesia/ubuntu-baseline:focal
+FROM sadaindonesia/ubuntu-baseline:bionic
 ADD /sources/images/traefik_v2.5.7_linux_amd64.tar.gz /opt/traefik
 
 # Update package list
