@@ -1,0 +1,54 @@
+api:
+  dashboard: true
+  insecure: true
+
+log:
+  filePath: "/opt/traefik/logs/traefik.log"
+  level: DEBUG
+
+accessLog:
+  filePath: "/opt/traefik/logs/access.log"
+
+tracing:
+  serviceName: traefik
+
+experimental:
+  http3: true
+
+entryPoints:
+  traefik:
+    address: ":8080"
+    enableHTTP3: true
+    forwardedHeaders:
+      insecure: true
+    proxyProtocol:
+      insecure: true
+  main80tcp:
+    address: ":80/tcp"
+    forwardedHeaders:
+      insecure: true
+    proxyProtocol:
+      insecure: true
+  main80udp:
+    address: ":80/udp"
+    forwardedHeaders:
+      insecure: true
+    proxyProtocol:
+      insecure: true
+  main443tcp:
+    address: ":443/tcp"
+    forwardedHeaders:
+      insecure: true
+    proxyProtocol:
+      insecure: true
+  main443udp:
+    address: ":443/udp"
+    forwardedHeaders:
+      insecure: true
+    proxyProtocol:
+      insecure: true
+
+providers:
+  file:
+    directory: "/opt/traefik/conf/providers"
+    watch: true

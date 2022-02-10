@@ -1,0 +1,15 @@
+http:
+  serversTransports:
+    insecureSkipVerify: true
+  routes:
+    sadata-main:
+      entryPoints:
+        - main80tcp
+        - main443tcp
+  services:
+    sadata-main:
+      loadBalancer:
+        servers:
+          - url: "http://{remote_server_01}:443/{subfix}"
+          - url: "http://{remote_server_02}:443/{subfix}"
+          - url: "http://{remote_server_03}:443/{subfix}"

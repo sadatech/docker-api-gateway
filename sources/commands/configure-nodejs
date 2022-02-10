@@ -1,8 +1,0 @@
-#!/bin/sh
-set -e
-
-# Install from nodesource
-curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-sudo apt install -y nodejs
-
-#
